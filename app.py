@@ -14,7 +14,7 @@ from streamlit_folium import st_folium
 import plotly.express as px
 import plotly.graph_objects as go
 import calendar
-
+import gdown
 # === CONFIGURATION PAGE ===
 st.set_page_config(
     page_title="Biodiversité Grand Est 2025",
@@ -50,7 +50,15 @@ def load_data():
     #     engine='python'  # moteur plus tolérant
     # )
 
-    df = pd.read_csv("https://drive.google.com/uc?export=download&id=1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl", parse_dates=['dateObservation'])
+    file_id = "1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    output = "biodiv_grand_est_merger.csv"
+
+    if not os.path.exists(output):
+        gdown.download(url, output, quiet=False)
+
+    df = pd.read_csv(output, parse_dates=["dateObservation"])
+
     communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
     departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
     communes = pd.read_csv(
@@ -498,6 +506,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
 
 
