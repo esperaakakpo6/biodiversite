@@ -50,7 +50,7 @@ def load_data():
     #     engine='python'  # moteur plus tolérant
     # )
 
-    df = pd.read_csv("https://drive.google.com/file/d/1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl/view?usp=sharing", parse_dates=['dateObservation'])
+    df = pd.read_csv("https://drive.google.com/uc?id=1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl", parse_dates=['dateObservation'])
     communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
     departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
     communes = pd.read_csv(
@@ -498,6 +498,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
 
 
