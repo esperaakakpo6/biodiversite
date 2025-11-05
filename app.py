@@ -48,7 +48,7 @@ def load_data():
     communes_grand_est = gpd.read_file(r"02_Donnees_Secondaires/communes-grand-est.geojson")
     departements_grand_est = gpd.read_file(r"02_Donnees_Secondaires/departements-grand-est.geojson")
     communes = pd.read_csv(
-        r"02_Donnees_Secondaires\communes.csv",
+        r"02_Donnees_Secondaires/communes.csv",
         sep=';',  # ou ',' selon ton fichier
         engine='python'  # moteur plus tolérant
     )
@@ -576,5 +576,6 @@ elif page == "Synthèse & Recommandations":
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
 
