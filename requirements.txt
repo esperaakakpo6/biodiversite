@@ -8,4 +8,3 @@ statsmodels
 folium
 streamlit-folium
 plotly
-calendar
