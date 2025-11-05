@@ -15,6 +15,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import calendar
 import gdown
+
 # === CONFIGURATION PAGE ===
 st.set_page_config(
     page_title="Biodiversité Grand Est 2025",
@@ -41,15 +42,17 @@ st.markdown("""
 # === CHARGEMENT DES DONNÉES ===
 @st.cache_data
 def load_data():
-    # df = pd.read_csv("biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
-    # communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
-    # departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
-    # communes = pd.read_csv(
-    #     "02_Donnees_Secondaires\communes.csv",
-    #     sep=';',  # ou ',' selon ton fichier
-    #     engine='python'  # moteur plus tolérant
-    # )
-
+    # df = pd.read_csv(r"D:\Dataviz\biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
+    # df = pd.read_csv("https://drive.google.com/uc?export=download&id=1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl", parse_dates=["dateObservation"])
+    
+    communes_grand_est = gpd.read_file(r"D:\Dataviz\02_Donnees_Secondaires\communes-grand-est.geojson")
+    departements_grand_est = gpd.read_file(r"D:\Dataviz\02_Donnees_Secondaires\departements-grand-est.geojson")
+    communes = pd.read_csv(
+        r"D:\Dataviz\02_Donnees_Secondaires\communes.csv",
+        sep=';',  # ou ',' selon ton fichier
+        engine='python'  # moteur plus tolérant
+    )
+    
     file_id = "1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl"
     url = f"https://drive.google.com/uc?id={file_id}"
     output = "biodiv_grand_est_merger.csv"
@@ -59,17 +62,9 @@ def load_data():
 
     df = pd.read_csv(output, parse_dates=["dateObservation"])
 
-    communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
-    departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
-    communes = pd.read_csv(
-        "02_Donnees_Secondaires\communes.csv",
-        sep=';',  # ou ',' selon ton fichier
-        engine='python'  # moteur plus tolérant
-    )
-    
         
     # Nettoyage
-    for col in ['population 2025', 'urbain', 'agricole', 'naturel', 'humide', 'eau']:
+    for col in ["population 2025", 'urbain', 'agricole', 'naturel', 'humide', 'eau']:
         df[col] = pd.to_numeric(df[col], errors='coerce')
     
     df['mois'] = df['dateObservation'].dt.month
@@ -232,20 +227,64 @@ elif page == "Analyses Spatiales":
     #     "Communes (Choroplèthe)": "carte_observations_communes.html",
     #     "Hotspots Biodiv": "hotspots_biodiv.html"
     # }
-
+        
+    # selected_map = st.selectbox("Choisir une carte", list(html_files.keys()))
+    
+    # with open(html_files[selected_map], "r", encoding="utf-8") as f:
+    #     html_data = f.read()
+    
+    # st.components.v1.html(html_data, height=600)
+    
+    # --- Dictionnaire de tes cartes Google Drive ---
     html_files = {
-        "Heatmap Globale": "https://drive.google.com/file/d/1CSL6q8L7hXXaCMUgunjCA3CIOnYzIUVz/view?usp=sharing",
+        "Heatmap Globale": "https://drive.google.com/file/d/1CSL6q8L7hXXaCMUgunjCA3CIOnYzIUVz",
         "Plantes Humides": "https://drive.google.com/file/d/1bNH1kWCoaYUl_F8nhAgqj58ycWiAZ7cR/view?usp=sharing",
         "Communes (Choroplèthe)": "https://drive.google.com/file/d/1xaUlYWT74Jg4hmjo614lyn1MxlpWUSw7/view?usp=sharing",
         "Hotspots Biodiv": "https://drive.google.com/file/d/12C6i5nOUa4MY9laAdsezeQP6o0eCFWFr/view?usp=sharing"
     }
-    
-    selected_map = st.selectbox("Choisir une carte", list(html_files.keys()))
-    
-    with open(html_files[selected_map], "r", encoding="utf-8") as f:
+
+    # --- Sélecteur Streamlit ---
+    selected_map = st.selectbox("Choisir une carte :", list(html_files.keys()))
+
+    # --- Fonction utilitaire pour télécharger et charger une carte HTML ---
+    @st.cache_data
+    def load_map_from_drive(drive_url, filename):
+        """
+        Télécharge un fichier HTML depuis Google Drive (si nécessaire)
+        et retourne le chemin local du fichier.
+        """
+        # Extraction de l’ID du lien Drive (que le lien ait /d/ ou ?id=)
+        if "/d/" in drive_url:
+            file_id = drive_url.split("/d/")[1].split("/")[0]
+        elif "id=" in drive_url:
+            file_id = drive_url.split("id=")[1].split("&")[0]
+        else:
+            raise ValueError("Lien Google Drive non valide.")
+
+        url = f"https://drive.google.com/uc?id={file_id}"
+        output_path = os.path.join("maps", f"{filename}.html")
+
+        # Création du dossier local si besoin
+        os.makedirs("maps", exist_ok=True)
+
+        # Téléchargement uniquement si le fichier n'existe pas
+        if not os.path.exists(output_path):
+            with st.spinner(f"Téléchargement de {filename}..."):
+                gdown.download(url, output_path, quiet=False)
+
+        return output_path
+
+    # --- Récupération du lien sélectionné ---
+    selected_url = html_files[selected_map]
+
+    # --- Téléchargement/chargement de la carte ---
+    map_path = load_map_from_drive(selected_url, selected_map.replace(" ", "_"))
+
+    # --- Lecture et affichage de la carte dans Streamlit ---
+    with open(map_path, "r", encoding="utf-8") as f:
         html_data = f.read()
-    
-    st.components.v1.html(html_data, height=600)
+
+    st.components.v1.html(html_data, height=600, scrolling=True)
     
     if selected_map == "Communes (Choroplèthe)":
         st.markdown("""
@@ -331,21 +370,53 @@ elif page == "COVID, Biais":
     moy_post = post_covid.mean()
     st.warning(f"Taux moyen pré-COVID : {moy_pre}, post-COVID : {moy_post} (variation : {(moy_post - moy_pre)/moy_pre * 100:.2f}%)")
     
-    # Graphique
-    fig, ax = plt.subplots()
+    
+        # --- Conversion en DataFrame pour Plotly ---
+    pre_df = pre_covid.reset_index()
+    pre_df.columns = ['annee', 'observations']
+    post_df = post_covid.reset_index()
+    post_df.columns = ['annee', 'observations']
 
-    pd.concat([pre_covid, post_covid]).plot(
-        kind='bar',
-        title='Observations Pré/Post-COVID',
-        ax=ax
+    # --- Création du graphique interactif ---
+    fig = go.Figure()
+
+    # Barres pré-COVID
+    fig.add_trace(go.Bar(
+        x=pre_df['annee'],
+        y=pre_df['observations'],
+        name='Pré-COVID',
+        marker_color='steelblue'
+    ))
+
+    # Barres post-COVID
+    fig.add_trace(go.Bar(
+        x=post_df['annee'],
+        y=post_df['observations'],
+        name='Post-COVID',
+        marker_color='orange'
+    ))
+
+    # Ligne verticale pour marquer le début du COVID (à 2020)
+    fig.add_vline(
+        x=2019.5,  # juste avant 2020
+        line_dash='dash',
+        line_color='red',
+        annotation_text='Début COVID',
+        annotation_position='top right'
     )
 
-    # Ligne verticale pour marquer le début du COVID
-    ax.axvline(x=len(pre_covid)-0.5, color='red', linestyle='--', label='Début COVID')
-    ax.legend()
+    # --- Personnalisation du layout ---
+    fig.update_layout(
+        title='Observations Pré / Post COVID',
+        xaxis_title='Année',
+        yaxis_title='Nombre d\'observations',
+        barmode='group',
+        template='plotly_white',
+        legend=dict(title='', orientation='h', y=-0.2, x=0.3)
+    )
 
-    # Affichage dans Streamlit
-    st.pyplot(fig)
+    # --- Affichage interactif dans Streamlit ---
+    st.plotly_chart(fig, use_container_width=True)
     
     st.success("""**2020 = année charnière → confinement = boom naturaliste.**""")
     
@@ -504,11 +575,4 @@ elif page == "Synthèse & Recommandations":
 # === FOOTER ===
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
-
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
-
-
-
-
-
-
