@@ -41,7 +41,16 @@ st.markdown("""
 # === CHARGEMENT DES DONNÉES ===
 @st.cache_data
 def load_data():
-    df = pd.read_csv("biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
+    # df = pd.read_csv("biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
+    # communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
+    # departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
+    # communes = pd.read_csv(
+    #     "02_Donnees_Secondaires\communes.csv",
+    #     sep=';',  # ou ',' selon ton fichier
+    #     engine='python'  # moteur plus tolérant
+    # )
+
+    df = pd.read_csv("https://drive.google.com/file/d/1bNH1kWCoaYUl_F8nhAgqj58ycWiAZ7cR/view?usp=sharing", parse_dates=['dateObservation'])
     communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
     departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
     communes = pd.read_csv(
@@ -482,4 +491,5 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
