@@ -41,11 +41,11 @@ st.markdown("""
 # === CHARGEMENT DES DONNÉES ===
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r"D:\Dataviz\biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
-    communes_grand_est = gpd.read_file(r"D:\Dataviz\02_Donnees_Secondaires\communes-grand-est.geojson")
-    departements_grand_est = gpd.read_file(r"D:\Dataviz\02_Donnees_Secondaires\departements-grand-est.geojson")
+    df = pd.read_csv(r"biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
+    communes_grand_est = gpd.read_file(r"02_Donnees_Secondaires\communes-grand-est.geojson")
+    departements_grand_est = gpd.read_file(r"02_Donnees_Secondaires\departements-grand-est.geojson")
     communes = pd.read_csv(
-        r"D:\Dataviz\02_Donnees_Secondaires\communes.csv",
+        r"02_Donnees_Secondaires\communes.csv",
         sep=';',  # ou ',' selon ton fichier
         engine='python'  # moteur plus tolérant
     )
@@ -480,4 +480,5 @@ elif page == "Synthèse & Recommandations":
 # === FOOTER ===
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
+
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
