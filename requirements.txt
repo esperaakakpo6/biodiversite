@@ -8,3 +8,4 @@ statsmodels
 folium
 streamlit-folium
 plotly
+gdown
