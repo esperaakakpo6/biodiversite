@@ -50,7 +50,7 @@ def load_data():
     #     engine='python'  # moteur plus tolérant
     # )
 
-    df = pd.read_csv("https://drive.google.com/file/d/1bNH1kWCoaYUl_F8nhAgqj58ycWiAZ7cR/view?usp=sharing", parse_dates=['dateObservation'])
+    df = pd.read_csv("https://drive.google.com/file/d/1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl/view?usp=sharing", parse_dates=['dateObservation'])
     communes_grand_est = gpd.read_file("02_Donnees_Secondaires\communes-grand-est.geojson")
     departements_grand_est = gpd.read_file("02_Donnees_Secondaires\departements-grand-est.geojson")
     communes = pd.read_csv(
@@ -218,11 +218,18 @@ elif page == "Analyses Temporelles":
 elif page == "Analyses Spatiales":
     st.title("Cartographie Interactive")
     
+    # html_files = {
+    #     "Heatmap Globale": "heatmap_hotspots.html",
+    #     "Plantes Humides": "heatmap_plantes_humides.html",
+    #     "Communes (Choroplèthe)": "carte_observations_communes.html",
+    #     "Hotspots Biodiv": "hotspots_biodiv.html"
+    # }
+
     html_files = {
-        "Heatmap Globale": "heatmap_hotspots.html",
-        "Plantes Humides": "heatmap_plantes_humides.html",
-        "Communes (Choroplèthe)": "carte_observations_communes.html",
-        "Hotspots Biodiv": "hotspots_biodiv.html"
+        "Heatmap Globale": "https://drive.google.com/file/d/1CSL6q8L7hXXaCMUgunjCA3CIOnYzIUVz/view?usp=sharing",
+        "Plantes Humides": "https://drive.google.com/file/d/1bNH1kWCoaYUl_F8nhAgqj58ycWiAZ7cR/view?usp=sharing",
+        "Communes (Choroplèthe)": "https://drive.google.com/file/d/1xaUlYWT74Jg4hmjo614lyn1MxlpWUSw7/view?usp=sharing",
+        "Hotspots Biodiv": "https://drive.google.com/file/d/12C6i5nOUa4MY9laAdsezeQP6o0eCFWFr/view?usp=sharing"
     }
     
     selected_map = st.selectbox("Choisir une carte", list(html_files.keys()))
@@ -491,5 +498,6 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
 
