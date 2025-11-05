@@ -133,9 +133,6 @@ if page == "Accueil & Storytelling":
         """, unsafe_allow_html=True)
         
         st.markdown("""
-                    # **Biodiversité ou Observateurs ?**  
-*Ce que les données du Grand Est nous disent vraiment (2010–2024)*
-
 ---
 
 ## **1. L’Année où la Nature a « Explosé »**  
@@ -590,6 +587,7 @@ elif page == "Synthèse & Recommandations":
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
 
 
