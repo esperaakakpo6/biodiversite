@@ -45,8 +45,8 @@ def load_data():
     # df = pd.read_csv(r"D:\Dataviz\biodiv_grand_est_merger.csv", parse_dates=['dateObservation'])
     # df = pd.read_csv("https://drive.google.com/uc?export=download&id=1m_KQI34v87PzPx30xMIXpbFs36Wcmrnl", parse_dates=["dateObservation"])
     
-    communes_grand_est = gpd.read_file(r"02_Donnees_Secondaires\communes-grand-est.geojson")
-    departements_grand_est = gpd.read_file(r"02_Donnees_Secondaires\departements-grand-est.geojson")
+    communes_grand_est = gpd.read_file(r"02_Donnees_Secondaires/communes-grand-est.geojson")
+    departements_grand_est = gpd.read_file(r"02_Donnees_Secondaires/departements-grand-est.geojson")
     communes = pd.read_csv(
         r"02_Donnees_Secondaires\communes.csv",
         sep=';',  # ou ',' selon ton fichier
@@ -576,4 +576,5 @@ elif page == "Synthèse & Recommandations":
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Concours DataGrandEst 2025** – Thème : *Biodiversité*")
 st.sidebar.markdown("Made by Codjo Ulrich Expéra AKAKPO")
+
 
